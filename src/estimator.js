@@ -4,7 +4,7 @@ const { impact, severeImpact } = getObj();
 
 // console.log('getObj: ' + JSON.stringify(impact));
 // console.log('compute: ' + JSON.stringify(compute));
-  /* eslint-disable max-len */
+/* eslint-disable max-len */
 // {
 //   region: {
 //     name: "Africa",
@@ -62,7 +62,7 @@ const covid19ImpactEstimator = (data) => {
   // severeImpact.casesForVentilatorsByRequestedTime = 0.02 * severeImpact.infectionsByRequestedTime;
 
   compute('dollarsInFlight', (impact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30,
-  (severeImpact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30);
+    (severeImpact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30);
   // impact.dollarsInFlight = (impact.infectionsByRequestedTime * region.avgDailyIn ailyIncomePopulation * region.avgDailyIncomeInUSD) / 30;
 
 
