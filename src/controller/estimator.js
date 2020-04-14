@@ -7,6 +7,7 @@ const covid19ImpactEstimator = require('../estimator');
 
 
 const estimator = ((req, res) => {
+  console.log('estimator');
   const resultObj = covid19ImpactEstimator(req.body);
 
   if (req.params.resFormat && req.params.resFormat === 'xml') {
@@ -34,6 +35,7 @@ const estimator = ((req, res) => {
 
 
 const logs = ((req, res) => {
+  console.log('logs');
   fs.readFile(path.join(__dirname, '../../txt.log'), 'utf8', (err, data) => {
     if (err) throw err;
     res.set('Content-Type', 'text/plain');
