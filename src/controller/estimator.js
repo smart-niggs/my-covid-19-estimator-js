@@ -1,27 +1,30 @@
+/* eslint-disable consistent-return */
+const fs = require('fs');
 const xml = require('xml');
+const path = require('path');
 const covid19ImpactEstimator = require('../estimator');
-const { transformJsonToArrXml } = require('../util/functions');
+// const { transformJsonToArrXml } = require('../util/functions');
 
 
 const estimator = ((req, res) => {
-  let resultObj = covid19ImpactEstimator(req.body);
+  const resultObj = covid19ImpactEstimator(req.body);
 
   if (req.params.resFormat && req.params.resFormat === 'xml') {
     // res.set('Content-Type', 'text/xml');
     res.type('application/xml');
 
-    resultObj = {
-      region: {
-        regA: 'Africa',
-        regB: 19.7
-      },
-      periodType: 'days',
-      timeToElapse: 58
-    };
+    // resultObj = {
+    //   region: {
+    //     regA: 'Africa',
+    //     regB: 19.7
+    //   },
+    //   periodType: 'days',
+    //   timeToElapse: 58
+    // };
 
-    resultObj = transformJsonToArrXml(resultObj);
+    // resultObj = transformJsonToArrXml(resultObj);
+    console.log(`resultObj: ${JSON.stringify(resultObj)}`);
 
-    console.log('resultObj: ' + JSON.stringify(resultObj));
     return res.send(xml(resultObj));
     // return res.send(xml({ result: result }));
   }
@@ -30,6 +33,17 @@ const estimator = ((req, res) => {
 });
 
 
+const logs = ((req, res) => {
+  fs.readFile(path.join(__dirname, '../../txt.log'), 'utf8', (err, data) => {
+    if (err) throw err;
+    res.set('Content-Type', 'text/plain');
+
+    res.send(data);
+  });
+});
+
+
 module.exports = {
-  estimator
+  estimator,
+  logs
 };

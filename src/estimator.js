@@ -1,4 +1,10 @@
-/* eslint-disable max-len */
+const { compute, getObj } = require('./util/estimatorHelper');
+
+const { impact, severeImpact } = getObj();
+
+// console.log('getObj: ' + JSON.stringify(impact));
+// console.log('compute: ' + JSON.stringify(compute));
+  /* eslint-disable max-len */
 // {
 //   region: {
 //     name: "Africa",
@@ -26,34 +32,38 @@ const covid19ImpactEstimator = (data) => {
   const { region, reportedCases, totalHospitalBeds } = data;
   // const { region, periodType, timeToElapse, reportedCases, population, totalHospitalBeds } = data;
 
-  const impact = {};
-  const severeImpact = {};
-
-
   // challenge 1
-  impact.currentlyInfected = reportedCases * 10;
-  severeImpact.currentlyInfected = reportedCases * 50;
+  compute('currentlyInfected', reportedCases * 10, reportedCases * 50);
+  // impact.currentlyInfected = reportedCases * 10;
+  // severeImpact.currentlyInfected = reportedCases * 50;
 
-  impact.infectionsByRequestedTime = impact.currentlyInfected * 512;
-  severeImpact.infectionsByRequestedTime = severeImpact.currentlyInfected * 512;
+
+  compute('infectionsByRequestedTime', impact.currentlyInfected * 512, severeImpact.currentlyInfected * 512);
+  // impact.infectionsByRequestedTime = impact.currentlyInfected * 512;
+  // severeImpact.infectionsByRequestedTime = severeImpact.currentlyInfected * 512;
 
 
   // challenge 2
-  impact.severeCasesByRequestedTime = 0.15 * impact.infectionsByRequestedTime;
-  severeImpact.severeCasesByRequestedTime = 0.15 * severeImpact.infectionsByRequestedTime;
+  compute('severeCasesByRequestedTime', 0.15 * impact.infectionsByRequestedTime, 0.15 * severeImpact.infectionsByRequestedTime);
+  // impact.severeCasesByRequestedTime = 0.15 * impact.infectionsByRequestedTime;
+  // severeImpact.severeCasesByRequestedTime = 0.15 * severeImpact.infectionsByRequestedTime;
 
-  impact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds);
-  severeImpact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds);
+  compute('hospitalBedsByRequestedTime', impact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds), severeImpact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds));
+  // impact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds);
+  // severeImpact.hospitalBedsByRequestedTime = severeImpact.severeCasesByRequestedTime - (0.35 * totalHospitalBeds);
 
   // challenge 3
-  impact.casesForICUByRequestedTime = 0.05 * impact.infectionsByRequestedTime;
-  severeImpact.casesForICUByRequestedTime = 0.05 * severeImpact.infectionsByRequestedTime;
+  compute('casesForICUByRequestedTime', 0.05 * impact.infectionsByRequestedTime, 0.05 * severeImpact.infectionsByRequestedTime);
+  // impact.casesForICUByRequestedTime = 0.05 * impact.infectionsByRequestedTime;
+  // severeImpact.casesForICUByRequestedTime = 0.05 * severeImpact.infectionsByRequestedTime;
 
-  impact.casesForVentilatorsByRequestedTime = 0.02 * impact.infectionsByRequestedTime;
-  severeImpact.casesForVentilatorsByRequestedTime = 0.02 * severeImpact.infectionsByRequestedTime;
+  compute('casesForVentilatorsByRequestedTime', 0.02 * impact.infectionsByRequestedTime, 0.02 * severeImpact.infectionsByRequestedTime);
+  // impact.casesForVentilatorsByRequestedTime = 0.02 * impact.infectionsByRequestedTime;
+  // severeImpact.casesForVentilatorsByRequestedTime = 0.02 * severeImpact.infectionsByRequestedTime;
 
-  impact.dollarsInFlight = (impact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30;
-  severeImpact.dollarsInFlight = (2 / 100) * severeImpact.infectionsByRequestedTime;
+  compute('dollarsInFlight', (impact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30,
+  (severeImpact.infectionsByRequestedTime * region.avgDailyIncomePopulation * region.avgDailyIncomeInUSD) / 30);
+  // impact.dollarsInFlight = (impact.infectionsByRequestedTime * region.avgDailyIn ailyIncomePopulation * region.avgDailyIncomeInUSD) / 30;
 
 
   return { data, impact, severeImpact };
