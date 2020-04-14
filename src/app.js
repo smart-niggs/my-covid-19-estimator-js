@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') !== 'production' ? err : {};
 
   res.status(err.status || 500);
-  res.json({ ...err });
+  // res.json({ ...err });
   console.log(err);
 });
 

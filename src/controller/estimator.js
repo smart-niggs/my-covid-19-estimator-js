@@ -1,32 +1,25 @@
 /* eslint-disable consistent-return */
 const fs = require('fs');
-const xml = require('xml');
+// const xml = require('xml');
 const path = require('path');
+// const convert = require('xml-js');
+const builder = require('xmlbuilder');
 const covid19ImpactEstimator = require('../estimator');
-// const { transformJsonToArrXml } = require('../util/functions');
 
 
 const estimator = ((req, res) => {
   console.log('estimator');
-  const resultObj = covid19ImpactEstimator(req.body);
+  let resultObj = covid19ImpactEstimator(req.body);
 
   if (req.params.resFormat && req.params.resFormat === 'xml') {
     // res.set('Content-Type', 'text/xml');
     res.type('application/xml');
 
-    // resultObj = {
-    //   region: {
-    //     regA: 'Africa',
-    //     regB: 19.7
-    //   },
-    //   periodType: 'days',
-    //   timeToElapse: 58
-    // };
+    // resultObj = convert.json2xml(resultObj);
+    resultObj = builder.create(resultObj).end({ pretty: true });
 
-    // resultObj = transformJsonToArrXml(resultObj);
-    console.log(`resultObj: ${JSON.stringify(resultObj)}`);
-
-    return res.send(xml(resultObj));
+    // console.log(`resultObj: ${resultObj}`);
+    return res.send(resultObj);
     // return res.send(xml({ result: result }));
   }
 
